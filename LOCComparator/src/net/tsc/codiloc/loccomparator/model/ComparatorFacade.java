@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Fachada para la comparación de código fuente.
  * 
- * @author Technologycal Synergy Company
+ * @author Carolina Benavides <gc.benavides10@uniandes.edu.co>
  * @version 1.0
  */
 public class ComparatorFacade {

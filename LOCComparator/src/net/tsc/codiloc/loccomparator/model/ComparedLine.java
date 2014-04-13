@@ -4,7 +4,7 @@ package net.tsc.codiloc.loccomparator.model;
  * Clase que representa una línea de código comparada y su ubicación dentro del
  * archivo fuente.
  * 
- * @author Technologycal Synergy Company
+ * @author Carolina Benavides <gc.benavides10@uniandes.edu.co>
  * @version 1.0
  */
 public class ComparedLine {
