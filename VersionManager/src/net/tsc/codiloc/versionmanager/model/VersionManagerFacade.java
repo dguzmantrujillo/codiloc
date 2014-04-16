@@ -96,14 +96,14 @@ public class VersionManagerFacade {
 			String modifiedFilePath) {
 
 		// Convertir archivos a listas de líneas
-		List<String> originalLine = new ArrayList<>();
-		List<String> modifiedLine = new ArrayList<>();
+		List<String> originalLines = new ArrayList<>();
+		List<String> modifiedLines = new ArrayList<>();
 
 		ComparatorFacade comparator = ComparatorFacade.getInstance();
 
 		try {
-			addedLinesList = comparator.getAddedLOC(originalLine, modifiedLine);
-			deletedLinesList = comparator.getDeletedLOC(originalLine, modifiedLine);
+			addedLinesList = comparator.getAddedLOC(originalLines, modifiedLines);
+			deletedLinesList = comparator.getDeletedLOC(originalLines, modifiedLines);
 
 			addedLines = countComparedLOC(addedLinesList);
 			deletedLines = countComparedLOC(deletedLinesList);
