@@ -14,9 +14,19 @@ public class ComparedLine {
 	 */
 	private String textLine;
 	/**
-	 * Ubicación de la línea de código.
+	 * Ubicación en el archivo de la línea de código.
 	 */
 	private int textLineNumber;
+	
+	/**
+	 * Constructor con argumentos
+	 * @param textLine La línea de código
+	 * @param textLineNumber La ubicación en el archivo de la línea de código.
+	 */
+	public ComparedLine(String textLine, int textLineNumber){
+		this.textLine = textLine;
+		this.textLineNumber = textLineNumber;
+	}
 
 	/**
 	 * @return Línea de código
