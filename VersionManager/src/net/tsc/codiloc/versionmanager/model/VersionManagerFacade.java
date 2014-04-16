@@ -7,7 +7,7 @@ import net.tsc.codiloc.loccomparator.model.ComparedLine;
 /**
  * Fachada para el manejo de versiones de código fuente.
  * 
- * @author Technologycal Synergy Company
+ * @author Carolina Benavides <gc.benavides10@uniandes.edu.co>
  * @version 1.0
  */
 public class VersionManagerFacade {

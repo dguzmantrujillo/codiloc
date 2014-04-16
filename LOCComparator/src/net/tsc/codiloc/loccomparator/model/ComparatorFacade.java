@@ -1,14 +1,58 @@
 package net.tsc.codiloc.loccomparator.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import net.tsc.codiloc.loccomparator.exception.ComparatorException;
+import difflib.Chunk;
+import difflib.Delta;
+import difflib.Delta.TYPE;
+import difflib.DiffUtils;
+import difflib.Patch;
 
 /**
  * Fachada para la comparación de código fuente.
  * 
- * @author Technologycal Synergy Company
+ * @author Carolina Benavides <gc.benavides10@uniandes.edu.co>
  * @version 1.0
  */
 public class ComparatorFacade {
+
+	/**
+	 * logger - Bitácora
+	 */
+	private static Logger logger = Logger.getLogger(ComparatorFacade.class.getName());
+
+	/**
+	 * instance - Instancia singleton.
+	 */
+	private static ComparatorFacade instance;
+
+	/**
+	 * Inicializa la fachada asegurando el singleton.
+	 */
+	public ComparatorFacade() {
+	}
+
+	/**
+	 * Crea una instancia singleton de <code>ComparatorFacade</code>.
+	 */
+	private static synchronized void createInstance() {
+		if (instance == null) {
+			instance = new ComparatorFacade();
+		}
+	}
+
+	/**
+	 * Obtiene una instancia singleton de <code>ComparatorFacade</code>.
+	 * 
+	 * @return Instancia singleton de <code>ComparatorFacade</code>.
+	 */
+	public static ComparatorFacade getInstance() {
+		createInstance();
+		return instance;
+	}
 
 	/**
 	 * Obtener las líneas de código adicionadas en el archivo modificado.
@@ -18,10 +62,10 @@ public class ComparatorFacade {
 	 * @param modifiedLines
 	 *            Código fuente modificado
 	 * @return Lista de líneas de código adicionadas
+	 * @throws ComparatorException 
 	 */
-	public List<ComparedLine> getAddedLOC(List<String> originalLines,
-			List<String> modifiedLines) {
-		return null;
+	public List<ComparedLine> getAddedLOC(List<String> originalLines, List<String> modifiedLines) throws ComparatorException {
+		return getComparedLines(originalLines, modifiedLines, TYPE.INSERT);
 	}
 
 	/**
@@ -32,10 +76,48 @@ public class ComparatorFacade {
 	 * @param modifiedLines
 	 *            Código fuente modificado
 	 * @return Lista de líneas de código eliminadas
+	 * @throws ComparatorException 
 	 */
-	public List<ComparedLine> getDeletedLOC(List<String> originalLines,
-			List<String> modifiedLines) {
-		return null;
+	public List<ComparedLine> getDeletedLOC(List<String> originalLines, List<String> modifiedLines) throws ComparatorException {
+		return getComparedLines(originalLines, modifiedLines, TYPE.DELETE);
+	}
+
+	/**
+	 * Obtiene la lista de líneas comparadas según el tipo de comparación
+	 * 
+	 * @param originalLines
+	 *            Líneas originales
+	 * @param modifiedLines
+	 *            Líneas comparadas
+	 * @param type
+	 *            Tipo de comparación
+	 * @return Lista de líneas comparadas
+	 * @throws ComparatorException
+	 */
+	private List<ComparedLine> getComparedLines(List<String> originalLines, List<String> modifiedLines, Delta.TYPE type)
+			throws ComparatorException {
+
+		if (originalLines == null || modifiedLines == null) {
+			throw new ComparatorException("Las líneas a comparar no pueden ser nulas");
+		}
+
+		Patch patch = DiffUtils.diff(originalLines, modifiedLines);
+
+		List<ComparedLine> comparedLines = new ArrayList<ComparedLine>();
+
+		List<Delta> deltas = patch.getDeltas();
+
+		for (Delta delta : deltas) {
+			if (delta.getType() == type) {
+				Chunk chunk = delta.getRevised();
+
+				for (int i = 0; i < chunk.getLines().size(); i++) {
+					comparedLines.add(new ComparedLine(chunk.getLines().get(i).toString(), chunk.getPosition() + 1 + i));
+				}
+			}
+		}
+
+		return comparedLines;
 	}
 
 }
