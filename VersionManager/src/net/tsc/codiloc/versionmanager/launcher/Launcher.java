@@ -1,5 +1,10 @@
 package net.tsc.codiloc.versionmanager.launcher;
 
+import java.util.logging.Logger;
+
+import net.tsc.codiloc.loccomparator.model.ComparatorFacade;
+import net.tsc.codiloc.versionmanager.model.VersionManagerFacade;
+
 /**
  * Clase de inicio del sistema.
  * 
@@ -8,7 +13,31 @@ package net.tsc.codiloc.versionmanager.launcher;
  */
 public class Launcher {
 
+	/**
+	 * logger - Bitácora
+	 */
+	private static Logger logger = Logger.getLogger(ComparatorFacade.class
+			.getName());
+
+	/**
+	 * Método de inicio del programa
+	 * @param args Rutas de los archivos original y modificado que se van a comparar.
+	 */
 	public static void main(String[] args) {
+
+		if (args.length < 2) {
+			logger.severe("Las rutas de los archivos original y modificado son obligatorias.");
+			System.exit(-1);
+		}
+
+		VersionManagerFacade versionManager = VersionManagerFacade
+				.getInstance();
+
+		versionManager.compareVersions(args[0], args[1]);
+
+		versionManager.print();
+
+		System.exit(0);
 
 	}
 }
