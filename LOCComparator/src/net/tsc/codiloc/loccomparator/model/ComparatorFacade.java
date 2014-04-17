@@ -2,7 +2,6 @@ package net.tsc.codiloc.loccomparator.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import net.tsc.codiloc.loccomparator.exception.ComparatorException;
 import difflib.Chunk;
@@ -20,11 +19,6 @@ import difflib.Patch;
 public class ComparatorFacade {
 
 	/**
-	 * logger - Bitácora
-	 */
-	private static Logger logger = Logger.getLogger(ComparatorFacade.class.getName());
-
-	/**
 	 * instance - Instancia singleton.
 	 */
 	private static ComparatorFacade instance;
@@ -32,7 +26,8 @@ public class ComparatorFacade {
 	/**
 	 * Inicializa la fachada asegurando el singleton.
 	 */
-	public ComparatorFacade() {
+	private ComparatorFacade() {
+		
 	}
 
 	/**
@@ -62,9 +57,10 @@ public class ComparatorFacade {
 	 * @param modifiedLines
 	 *            Código fuente modificado
 	 * @return Lista de líneas de código adicionadas
-	 * @throws ComparatorException 
+	 * @throws ComparatorException
 	 */
-	public List<ComparedLine> getAddedLOC(List<String> originalLines, List<String> modifiedLines) throws ComparatorException {
+	public List<ComparedLine> getAddedLOC(List<String> originalLines,
+			List<String> modifiedLines) throws ComparatorException {
 		return getComparedLines(originalLines, modifiedLines, TYPE.INSERT);
 	}
 
@@ -76,9 +72,10 @@ public class ComparatorFacade {
 	 * @param modifiedLines
 	 *            Código fuente modificado
 	 * @return Lista de líneas de código eliminadas
-	 * @throws ComparatorException 
+	 * @throws ComparatorException
 	 */
-	public List<ComparedLine> getDeletedLOC(List<String> originalLines, List<String> modifiedLines) throws ComparatorException {
+	public List<ComparedLine> getDeletedLOC(List<String> originalLines,
+			List<String> modifiedLines) throws ComparatorException {
 		return getComparedLines(originalLines, modifiedLines, TYPE.DELETE);
 	}
 
@@ -94,30 +91,26 @@ public class ComparatorFacade {
 	 * @return Lista de líneas comparadas
 	 * @throws ComparatorException
 	 */
-	private List<ComparedLine> getComparedLines(List<String> originalLines, List<String> modifiedLines, Delta.TYPE type)
+	private List<ComparedLine> getComparedLines(List<String> originalLines,
+			List<String> modifiedLines, Delta.TYPE type)
 			throws ComparatorException {
-
 		if (originalLines == null || modifiedLines == null) {
-			throw new ComparatorException("Las líneas a comparar no pueden ser nulas");
+			throw new ComparatorException(
+					"Las líneas a comparar no pueden ser nulas");
 		}
-
 		Patch patch = DiffUtils.diff(originalLines, modifiedLines);
-
 		List<ComparedLine> comparedLines = new ArrayList<ComparedLine>();
-
 		List<Delta> deltas = patch.getDeltas();
-
 		for (Delta delta : deltas) {
 			if (delta.getType() == type) {
 				Chunk chunk = delta.getRevised();
 
 				for (int i = 0; i < chunk.getLines().size(); i++) {
-					comparedLines.add(new ComparedLine(chunk.getLines().get(i).toString(), chunk.getPosition() + 1 + i));
+					comparedLines.add(new ComparedLine(chunk.getLines().get(i)
+							.toString(), chunk.getPosition() + 1 + i));
 				}
 			}
 		}
-
 		return comparedLines;
 	}
-
 }

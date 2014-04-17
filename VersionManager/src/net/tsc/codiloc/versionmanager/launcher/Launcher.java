@@ -3,6 +3,7 @@ package net.tsc.codiloc.versionmanager.launcher;
 import java.util.logging.Logger;
 
 import net.tsc.codiloc.loccomparator.model.ComparatorFacade;
+import net.tsc.codiloc.versionmanager.exception.VersionManagerException;
 import net.tsc.codiloc.versionmanager.model.VersionManagerFacade;
 
 /**
@@ -21,10 +22,12 @@ public class Launcher {
 
 	/**
 	 * Método de inicio del programa
-	 * @param args Rutas de los archivos original y modificado que se van a comparar.
+	 * 
+	 * @param args
+	 *            Rutas de los archivos original y modificado que se van a
+	 *            comparar.
 	 */
 	public static void main(String[] args) {
-
 		if (args.length < 2) {
 			logger.severe("Las rutas de los archivos original y modificado son obligatorias.");
 			System.exit(-1);
@@ -32,12 +35,13 @@ public class Launcher {
 
 		VersionManagerFacade versionManager = VersionManagerFacade
 				.getInstance();
-
-		versionManager.compareVersions(args[0], args[1]);
-
-		versionManager.print();
-
+		try {
+			versionManager.compareVersions(args[0], args[1]);
+			versionManager.print();
+		} catch (VersionManagerException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
 		System.exit(0);
-
 	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import net.tsc.codiloc.loccomparator.exception.ComparatorException;
 import net.tsc.codiloc.loccomparator.model.ComparatorFacade;
 import net.tsc.codiloc.loccomparator.model.ComparedLine;
+import net.tsc.codiloc.versionmanager.exception.VersionManagerException;
 import net.tsc.codiloc.versionmanager.model.VersionManagerFacade;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class VersionManagerTest {
     private final File modified = new File("C:\\Pruebas\\modificado\\ComparedLine.java");
     
 	@Test
-	public void compareVersion() {
+	public void compareVersion() throws VersionManagerException {
 
 		int addedLines = 0;
 		int deletedLines = 0;

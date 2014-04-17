@@ -7,7 +7,9 @@ import java.util.logging.Logger;
 import net.tsc.codiloc.loccomparator.exception.ComparatorException;
 import net.tsc.codiloc.loccomparator.model.ComparatorFacade;
 import net.tsc.codiloc.loccomparator.model.ComparedLine;
+import net.tsc.codiloc.loccounter.exception.LOCCounterException;
 import net.tsc.codiloc.loccounter.model.LOCFacade;
+import net.tsc.codiloc.versionmanager.exception.VersionManagerException;
 
 /**
  * Fachada para el manejo de versiones de código fuente.
@@ -20,7 +22,8 @@ public class VersionManagerFacade {
 	/**
 	 * logger - Bitácora
 	 */
-	private static Logger logger = Logger.getLogger(ComparatorFacade.class.getName());
+	private static Logger logger = Logger.getLogger(ComparatorFacade.class
+			.getName());
 
 	/**
 	 * instance - Instancia singleton.
@@ -36,7 +39,8 @@ public class VersionManagerFacade {
 	/**
 	 * Inicializa la fachada asegurando el singleton.
 	 */
-	public VersionManagerFacade() {
+	private VersionManagerFacade() {
+
 	}
 
 	/**
@@ -62,13 +66,21 @@ public class VersionManagerFacade {
 	 * Cuenta el número de líneas lógicas en el código fuente.
 	 * 
 	 * @param sourceCode
-	 *            Código fuente
-	 * @return Número de líneas
+	 *            Código fuente.
+	 * @return Número de líneas.
+	 * @throws VersionManagerException
+	 *             Si ocurre un error en el manejo de versiones.
 	 */
-	public int countLOC(String sourceCode) {
-		LOCFacade counter = new LOCFacade(); // pendiente de ajustar con el
-												// proyecto
-		return counter.count(sourceCode);
+	public int countLOC(String sourceCode) throws VersionManagerException {
+		LOCFacade counter = LOCFacade.getInstance();
+		int loc = 0;
+		try {
+			loc = counter.count(sourceCode);
+		} catch (LOCCounterException e) {
+			String msg = "A LOCCounterException occurred at VersionManagerFacade.countLOC";
+			logger.severe(msg + "\n" + e);
+		}
+		return loc;
 	}
 
 	/**
@@ -76,10 +88,14 @@ public class VersionManagerFacade {
 	 * versión modificada del código fuente.
 	 * 
 	 * @param comparedLine
-	 *            Líneas comparadas entre dos versiones
-	 * @return Número de líneas comparadas
+	 *            Líneas comparadas entre dos versiones.
+	 * @return Número de líneas comparadas.
+	 * @throws IllegalArgumentException
+	 *             Si <code>comparedLine</code> es <code>null</code>,
 	 */
 	public int countComparedLOC(List<ComparedLine> comparedLine) {
+		if (comparedLine == null)
+			throw new IllegalArgumentException("comparedLine must not be null");
 		return comparedLine.size();
 	}
 
@@ -87,13 +103,15 @@ public class VersionManagerFacade {
 	 * Compara dos versiones de código fuente.
 	 * 
 	 * @param originalFilePath
-	 *            Ruta del archivo fuente original
+	 *            Ruta del archivo fuente original.
 	 * @param modifiedFilePath
-	 *            Ruta del archivo fuente modificado
-	 * @return Ruta del nuevo archivo fuente generadom
+	 *            Ruta del archivo fuente modificado.
+	 * @return Ruta del archivo de modificaciones.
+	 * @throws VersionManagerException
+	 *             Si ocurre un error en el manejo de versiones.
 	 */
 	public String compareVersions(String originalFilePath,
-			String modifiedFilePath) {
+			String modifiedFilePath) throws VersionManagerException {
 
 		// Convertir archivos a listas de líneas
 		List<String> originalLines = new ArrayList<>();
@@ -102,8 +120,10 @@ public class VersionManagerFacade {
 		ComparatorFacade comparator = ComparatorFacade.getInstance();
 
 		try {
-			addedLinesList = comparator.getAddedLOC(originalLines, modifiedLines);
-			deletedLinesList = comparator.getDeletedLOC(originalLines, modifiedLines);
+			addedLinesList = comparator.getAddedLOC(originalLines,
+					modifiedLines);
+			deletedLinesList = comparator.getDeletedLOC(originalLines,
+					modifiedLines);
 
 			addedLines = countComparedLOC(addedLinesList);
 			deletedLines = countComparedLOC(deletedLinesList);
@@ -122,13 +142,13 @@ public class VersionManagerFacade {
 		logger.info("\nLíneas adicionadas: " + addedLines);
 
 		for (ComparedLine line : addedLinesList) {
-			logger.info(line.getTextLineNumber() + " - " +line.getTextLine());
+			logger.info(line.getTextLineNumber() + " - " + line.getTextLine());
 		}
 
 		logger.info("\nLíneas eliminadas: " + deletedLines);
 
 		for (ComparedLine line : deletedLinesList) {
-			logger.info(line.getTextLineNumber() + " - " +line.getTextLine());
+			logger.info(line.getTextLineNumber() + " - " + line.getTextLine());
 		}
 
 		logger.info("\nLíneas totales: " + totalLines);

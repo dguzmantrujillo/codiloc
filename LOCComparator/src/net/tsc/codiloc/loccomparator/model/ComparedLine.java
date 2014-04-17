@@ -10,52 +10,107 @@ package net.tsc.codiloc.loccomparator.model;
 public class ComparedLine {
 
 	/**
-	 * Línea de código.
+	 * textLine - Línea de código.
 	 */
 	private String textLine;
+
 	/**
-	 * Ubicación en el archivo de la línea de código.
+	 * textLineNumber - Ubicación en el archivo de la línea de código.
 	 */
 	private int textLineNumber;
-	
+
 	/**
 	 * Constructor con argumentos
-	 * @param textLine La línea de código
-	 * @param textLineNumber La ubicación en el archivo de la línea de código.
+	 * 
+	 * @param textLine
+	 *            La línea de código
+	 * @param textLineNumber
+	 *            La ubicación en el archivo de la línea de código.
 	 */
-	public ComparedLine(String textLine, int textLineNumber){
+	public ComparedLine(String textLine, int textLineNumber) {
 		this.textLine = textLine;
 		this.textLineNumber = textLineNumber;
 	}
 
 	/**
-	 * @return Línea de código
+	 * Obtiene {@link #textLine}
+	 * 
+	 * @return {@link #textLine}
 	 */
 	public String getTextLine() {
 		return textLine;
 	}
 
 	/**
+	 * Establece {@link #textLine}
+	 * 
 	 * @param textLine
-	 *            Línea de código
+	 *            {@link #textLine} a ser establecido.
 	 */
 	public void setTextLine(String textLine) {
 		this.textLine = textLine;
 	}
 
 	/**
-	 * @return Ubicación de la línea de código
+	 * Obtiene {@link #textLineNumber}
+	 * 
+	 * @return {@link #textLineNumber}
 	 */
 	public int getTextLineNumber() {
 		return textLineNumber;
 	}
 
 	/**
-	 * @param textLineNumber
-	 *            Ubicación de la línea de código
+	 * Establece {@link #textLineNumber}
+	 * 
+	 * @param textLine
+	 *            {@link #textLineNumber} a ser establecido.
 	 */
 	public void setTextLineNumber(int textLineNumber) {
 		this.textLineNumber = textLineNumber;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((textLine == null) ? 0 : textLine.hashCode());
+		result = prime * result + textLineNumber;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ComparedLine other = (ComparedLine) obj;
+		if (textLine == null) {
+			if (other.textLine != null)
+				return false;
+		} else if (!textLine.equals(other.textLine))
+			return false;
+		if (textLineNumber != other.textLineNumber)
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ComparedLine {textLine=" + textLine + ", textLineNumber="
+				+ textLineNumber + "}";
+	}
 }

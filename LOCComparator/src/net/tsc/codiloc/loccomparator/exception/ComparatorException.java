@@ -7,8 +7,9 @@ package net.tsc.codiloc.loccomparator.exception;
  * @version 1.0
  */
 public class ComparatorException extends Exception {
+
 	/**
-	 * UID
+	 * serialVersionUID - Identificador único de clase.
 	 */
 	private static final long serialVersionUID = -274379734673795471L;
 
