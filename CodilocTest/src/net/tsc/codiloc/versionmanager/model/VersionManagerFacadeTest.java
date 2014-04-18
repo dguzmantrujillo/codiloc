@@ -1,4 +1,4 @@
-package net.tsc.codiloc.versionmanager.test;
+package net.tsc.codiloc.versionmanager.model;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,7 +14,7 @@ import net.tsc.codiloc.versionmanager.model.VersionManagerFacade;
 
 import org.junit.Test;
 
-public class VersionManagerTest {
+public class VersionManagerFacadeTest {
 	
 	private final File original = new File("C:\\Pruebas\\original\\ComparedLine.java");
 	 
