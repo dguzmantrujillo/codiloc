@@ -112,8 +112,10 @@ public class ComparatorFacade {
 				}
 				
 				for (int i = 0; i < chunk.getLines().size(); i++) {
-					comparedLines.add(new ComparedLine(chunk.getLines().get(i)
-							.toString().trim(), chunk.getPosition() + 1 + i));
+					if(!chunk.getLines().get(i).toString().trim().isEmpty()){
+						comparedLines.add(new ComparedLine(chunk.getLines().get(i)
+							.toString(), chunk.getPosition() + 1 + i));
+					}
 				}
 			}
 		}
