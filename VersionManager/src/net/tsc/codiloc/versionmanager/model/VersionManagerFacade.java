@@ -1,9 +1,11 @@
 package net.tsc.codiloc.versionmanager.model;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
 
+import net.tsc.codiloc.filemanager.exception.FileManagerException;
+import net.tsc.codiloc.filemanager.model.FileManagerFacade;
 import net.tsc.codiloc.loccomparator.exception.ComparatorException;
 import net.tsc.codiloc.loccomparator.model.ComparatorFacade;
 import net.tsc.codiloc.loccomparator.model.ComparedLine;
@@ -112,13 +114,23 @@ public class VersionManagerFacade {
 	 */
 	public String compareVersions(String originalFilePath,
 			String modifiedFilePath) throws VersionManagerException {
-
-		// Convertir archivos a listas de líneas
-		List<String> originalLines = new ArrayList<>();
-		List<String> modifiedLines = new ArrayList<>();
-
+		
+		List<String> originalLines = null;
+		List<String> modifiedLines = null;
+		
 		ComparatorFacade comparator = ComparatorFacade.getInstance();
+		FileManagerFacade fileManager = FileManagerFacade.getInstance();
 
+		File originalFile = new File(originalFilePath);
+		File modifiedFile = new File(modifiedFilePath);
+		
+		try {
+			originalLines = fileManager.getLinesFromFile(originalFile);
+			modifiedLines = fileManager.getLinesFromFile(modifiedFile);
+		} catch (FileManagerException e) {
+			logger.severe(e.getMessage());
+		}
+		
 		try {
 			addedLinesList = comparator.getAddedLOC(originalLines,
 					modifiedLines);
@@ -127,8 +139,11 @@ public class VersionManagerFacade {
 
 			addedLines = countComparedLOC(addedLinesList);
 			deletedLines = countComparedLOC(deletedLinesList);
-			totalLines = countLOC("ComparatorFacade comparator = ComparatorFacade.getInstance();");
-
+			
+			for(String line : modifiedLines){
+				totalLines += countLOC(line);
+			}
+			
 		} catch (ComparatorException e) {
 			logger.severe(e.getMessage());
 			System.exit(-1);
@@ -138,19 +153,19 @@ public class VersionManagerFacade {
 	}
 
 	public void print() {
-		logger.info("RESULTADO DE LA COMPARACION");
-		logger.info("\nLíneas adicionadas: " + addedLines);
+		System.out.println("RESULTADO DE LA COMPARACION");
+		System.out.println("\nLíneas adicionadas: " + addedLines);
 
 		for (ComparedLine line : addedLinesList) {
-			logger.info(line.getTextLineNumber() + " - " + line.getTextLine());
+			System.out.println(line.getTextLineNumber() + " - " + line.getTextLine());
 		}
 
-		logger.info("\nLíneas eliminadas: " + deletedLines);
+		System.out.println("\nLíneas eliminadas: " + deletedLines);
 
 		for (ComparedLine line : deletedLinesList) {
-			logger.info(line.getTextLineNumber() + " - " + line.getTextLine());
+			System.out.println(line.getTextLineNumber() + " - " + line.getTextLine());
 		}
 
-		logger.info("\nLíneas totales: " + totalLines);
+		System.out.println("\nLíneas totales: " + totalLines);
 	}
 }
