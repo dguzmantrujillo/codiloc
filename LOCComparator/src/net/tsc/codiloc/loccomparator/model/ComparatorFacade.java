@@ -102,12 +102,20 @@ public class ComparatorFacade {
 		List<ComparedLine> comparedLines = new ArrayList<ComparedLine>();
 		List<Delta> deltas = patch.getDeltas();
 		for (Delta delta : deltas) {
+			Chunk chunk = null;
 			if (delta.getType() == type) {
-				Chunk chunk = delta.getRevised();
-
+				
+				if(type.equals(TYPE.DELETE)){
+					chunk = delta.getOriginal();
+				} else {
+					chunk = delta.getRevised();
+				}
+				
 				for (int i = 0; i < chunk.getLines().size(); i++) {
-					comparedLines.add(new ComparedLine(chunk.getLines().get(i)
+					if(!chunk.getLines().get(i).toString().trim().isEmpty()){
+						comparedLines.add(new ComparedLine(chunk.getLines().get(i)
 							.toString(), chunk.getPosition() + 1 + i));
+					}
 				}
 			}
 		}

@@ -39,7 +39,7 @@ public class Launcher {
 			versionManager.compareVersions(args[0], args[1]);
 			versionManager.print();
 		} catch (VersionManagerException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 			System.exit(-1);
 		}
 		System.exit(0);
