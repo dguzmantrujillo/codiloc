@@ -47,13 +47,13 @@ public class VersionManagerFacadeTest {
 
 		try {
 			addedLinesList = comparator.getAddedLOC(originalLines, modifiedLines);
-			assertEquals("private String addLine;", addedLinesList.get(0).getTextLine());
-    		assertEquals("private int addLineNumber;", addedLinesList.get(1).getTextLine());
+			assertEquals("	private String addLine;", addedLinesList.get(0).getTextLine());
+    		assertEquals("	private int addLineNumber;", addedLinesList.get(1).getTextLine());
     		
 			deletedLinesList = comparator.getDeletedLOC(originalLines, modifiedLines);
-			assertEquals("public void setTextLineNumber(int textLineNumber) {", deletedLinesList.get(0).getTextLine());
-    		assertEquals("this.textLineNumber = textLineNumber;", deletedLinesList.get(1).getTextLine());
-    		assertEquals("}", deletedLinesList.get(2).getTextLine());
+			assertEquals("	public void setTextLineNumber(int textLineNumber) {", deletedLinesList.get(0).getTextLine());
+    		assertEquals("		this.textLineNumber = textLineNumber;", deletedLinesList.get(1).getTextLine());
+    		assertEquals("	}", deletedLinesList.get(2).getTextLine());
 
 			addedLines = versionManager.countComparedLOC(addedLinesList);
 			assertEquals(2, addedLines);
