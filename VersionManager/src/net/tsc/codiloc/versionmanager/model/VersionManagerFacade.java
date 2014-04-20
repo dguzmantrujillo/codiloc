@@ -95,10 +95,17 @@ public class VersionManagerFacade {
 	 * @throws IllegalArgumentException
 	 *             Si <code>comparedLine</code> es <code>null</code>,
 	 */
-	public int countComparedLOC(List<ComparedLine> comparedLine) {
+	public int countComparedLOC(List<ComparedLine> comparedLine) throws VersionManagerException{
+		int lines = 0;
+		
 		if (comparedLine == null)
 			throw new IllegalArgumentException("comparedLine must not be null");
-		return comparedLine.size();
+		
+		for(ComparedLine line : comparedLine){
+			lines += countLOC(line.getTextLine());
+		}
+		
+		return lines;
 	}
 
 	/**
@@ -107,7 +114,7 @@ public class VersionManagerFacade {
 	 * @param originalFilePath
 	 *            Ruta del archivo fuente original.
 	 * @param modifiedFilePath
-	 *            Ruta del archivo fuente modificado.
+//	 *            Ruta del archivo fuente modificado.
 	 * @return Ruta del archivo de modificaciones.
 	 * @throws VersionManagerException
 	 *             Si ocurre un error en el manejo de versiones.
